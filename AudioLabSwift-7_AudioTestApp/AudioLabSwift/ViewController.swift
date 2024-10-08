@@ -10,8 +10,7 @@ import Metal
 class ViewController: UIViewController {
 
     @IBOutlet weak var userView: UIView!  // to display graph
-    
-    
+
     // to hold constant buffer size = 4096
     struct AudioConstants{
         static let AUDIO_BUFFER_SIZE = 1024*4
@@ -88,6 +87,10 @@ class ViewController: UIViewController {
         frequency1 = 18000
         frequency2 = 18500
         frequency3 = 19000
+        
+        //Module A
+        loudestFreq1.text = "Noise"
+        loudestFreq2.text = "Noise"
     }
     
     
@@ -110,6 +113,7 @@ class ViewController: UIViewController {
         // run the loop for updating the graph peridocially (every 0.05 s)
         timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             self.updateGraph()
+            self.updateLoudestFrequencies()  //Module A: update the loudest frequencies
         }
     }
     
@@ -153,6 +157,49 @@ class ViewController: UIViewController {
             )
         }
     }
+    
+    // properties to hold the two loudest frequencies
+    var loudestFrequency1: Float = 0.0 {
+        didSet {
+            labelF1.text = loudestFrequency1 > 100 ? String(format: "F1: %.2f Hz", loudestFrequency1) : "noise"
+        }
+    }
+    
+    var loudestFrequency2: Float = 0.0 {
+        didSet {
+            labelF2.text = loudestFrequency2 > 100 ? String(format: "F2: %.2f Hz", loudestFrequency2) : "noise"
+        }
+    }
+    
+    // to display frequency labels
+    @IBOutlet weak var loudestFreq1: UILabel!
+    @IBOutlet weak var loudestFreq2: UILabel!
 
+    //Module A
+    private var lastFrequencies: (Float?, Float?) = (nil, nil)   // To store last detected frequencies
+    private let magnitudeThreshold: Float = 100.0                // Threshold for large enough magnitude (say 100 Hz)
+
+    
+    // Module A: method to update the loudest frequencies
+    func updateLoudestFrequencies() {
+        // Call the detectLoudestFrequencies method from AudioModel
+        if let frequencies = audio.detectLoudestFrequencies(){
+            if frequencies.0 > magnitudeThreshold {
+                loudestFreq1.text = String(format: "Loudest frequency 1: %.2f Hz", frequencies.0)
+            } else {
+                loudestFreq1.text = "Noise"
+            }
+            if frequencies.1 > magnitudeThreshold {
+                loudestFreq2.text = String(format: "Loudest frequency 2: %.2f Hz", frequencies.1)
+            } else {
+                loudestFreq2.text = "Noise"
+            }
+        } else {
+            //not enough frequencies were found
+            loudestFreq1.text = "Noise"
+            loudestFreq2.text = "Noise"
+        }
+    }
+    
 }
 
