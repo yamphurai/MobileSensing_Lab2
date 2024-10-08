@@ -23,7 +23,7 @@ class MetalGraph {
     
     //MARK: MTL Properties
     private var device: MTLDevice!
-    private var metalLayer: CAMetalLayer!
+    var metalLayer: CAMetalLayer!
     private var pipelineState: MTLRenderPipelineState!
     private var commandQueue: MTLCommandQueue!
     private var timer: CADisplayLink!
@@ -219,7 +219,7 @@ class MetalGraph {
         
     }
     
-    private func render() {
+    func render() {
         if needsRender == false { return } // prevent over-rendering manually
         needsRender = false
         

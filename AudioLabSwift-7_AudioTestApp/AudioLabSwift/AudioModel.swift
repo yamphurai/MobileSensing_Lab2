@@ -11,6 +11,7 @@ class AudioModel {
     
     // MARK: Private Properties
     private var BUFFER_SIZE:Int    // size of the buffer to store audio data
+    var volume:Float = 0.1         // user setable volume
     
     // phase 1, 2 & 3 are initial phases for sine wave generation
     private var phase1:Float = 0.0
@@ -82,8 +83,7 @@ class AudioModel {
             fileReader.play()   //start audio file playback
         }
     }
-    
-    
+        
     // method to start audio playback using audioManager
     func play(){
         if let manager = self.audioManager{
@@ -284,4 +284,60 @@ class AudioModel {
             }
         }
     
+    //==========================================
+    // MARK: Added From Class Example To Generate Sound For Doppler
+    
+    func startProcessingSinewaveForPlayback(withFreq:Float=330.0){
+        sineFrequency = withFreq
+        if let manager = self.audioManager{
+            // swift sine wave loop creation
+            manager.outputBlock = self.handleSpeakerQueryWithSinusoid
+        }
+    }
+    
+    var sineFrequency:Float = 0.0 { // frequency in Hz (changeable by user)
+            didSet{
+                if let manager = self.audioManager {
+                    // if using swift for generating the sine wave: when changed, we need to update our increment
+                    phaseIncrement = Float(2*Double.pi*Double(sineFrequency)/manager.samplingRate)
+                }
+            }
+        }
+    
+    // SWIFT SINE WAVE
+    // everything below here is for the swift implementation
+    private var phase:Float = 0.0
+    private var phaseIncrement:Float = 0.0
+    
+    private func handleSpeakerQueryWithSinusoid(data:Optional<UnsafeMutablePointer<Float>>, numFrames:UInt32, numChannels: UInt32){
+        // while pretty fast, this loop is still not quite as fast as
+        // writing the code in c, so I placed a function in Novocaine to do it for you
+        // use setOutputBlockToPlaySineWave() in Novocaine
+        // EDIT: fixed in 2023
+        if let arrayData = data{
+            var i = 0
+            let chan = Int(numChannels)
+            let frame = Int(numFrames)
+            if chan==1{
+                while i<frame{
+                    arrayData[i] = sin(phase)
+                    phase += phaseIncrement
+                    if (phase >= sineWaveRepeatMax) { phase -= sineWaveRepeatMax }
+                    i+=1
+                }
+            }else if chan==2{
+                let len = frame*chan
+                while i<len{
+                    arrayData[i] = sin(phase)
+                    arrayData[i+1] = arrayData[i]
+                    phase += phaseIncrement
+                    if (phase >= sineWaveRepeatMax) { phase -= sineWaveRepeatMax }
+                    i+=2
+                }
+            }
+            // adjust volume of audio file output
+            vDSP_vsmul(arrayData, 1, &(self.volume), arrayData, 1, vDSP_Length(numFrames*numChannels))
+                            
+        }
+    }
 }

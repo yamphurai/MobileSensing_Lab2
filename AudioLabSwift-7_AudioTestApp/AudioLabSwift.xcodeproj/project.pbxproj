@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		492F265E2CB1C0B70055A218 /* DopplerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492F265D2CB1C0B70055A218 /* DopplerViewController.swift */; };
 		B60B8A092ACCAFFD0083315D /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B60B8A082ACCAFFD0083315D /* Shaders.metal */; };
 		B65B5A5A24F4409F00E74E73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65B5A5924F4409F00E74E73 /* AppDelegate.swift */; };
 		B65B5A5C24F4409F00E74E73 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65B5A5B24F4409F00E74E73 /* SceneDelegate.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		492F265D2CB1C0B70055A218 /* DopplerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DopplerViewController.swift; sourceTree = "<group>"; };
 		B60B8A082ACCAFFD0083315D /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		B65B5A5624F4409F00E74E73 /* AudioLabSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioLabSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B65B5A5924F4409F00E74E73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				B65B5A6724F440A100E74E73 /* Info.plist */,
 				B65B5A6D24F440D500E74E73 /* AudioLabSwift-Bridging-Header.h */,
 				B65B5A7424F4440300E74E73 /* satisfaction.mp3 */,
+				492F265D2CB1C0B70055A218 /* DopplerViewController.swift */,
 			);
 			path = AudioLabSwift;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 				B65B5A5A24F4409F00E74E73 /* AppDelegate.swift in Sources */,
 				B65B5A7D24F458D700E74E73 /* FFTHelper.m in Sources */,
 				B65B5A5C24F4409F00E74E73 /* SceneDelegate.swift in Sources */,
+				492F265E2CB1C0B70055A218 /* DopplerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,7 +341,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD62CDC25;
+				DEVELOPMENT_TEAM = 3953GVK8Y6;
 				INFOPLIST_FILE = AudioLabSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -359,7 +363,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD62CDC25;
+				DEVELOPMENT_TEAM = 3953GVK8Y6;
 				INFOPLIST_FILE = AudioLabSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
