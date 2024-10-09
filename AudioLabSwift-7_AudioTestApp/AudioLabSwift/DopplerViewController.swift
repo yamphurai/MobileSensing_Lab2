@@ -19,7 +19,7 @@ class DopplerViewController: UIViewController {
     let movementThreshold: Float = 25.0
     let lowestFrequency:Float = 17000
     let highestFrequency:Float = 20000
-    let zoomWindow:Int = 120
+    let zoomWindow:Int = 100
     let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
     
     var timer: Timer?
@@ -131,36 +131,24 @@ class DopplerViewController: UIViewController {
         }
     }
     
-    // Calculate Doppler Shift And Update Display
+    // Calculate Doppler Effect From FFT Dta
     func calcDoppler(fftData: [Float], startIndex: Int, windowSize: Int) {
-        // Get Windowed Data Set To Remove Noise
-        let windowedData = getWindowedData(fftData: fftData, windowSize: windowSize)
+       
+        // Split Data Into Left, Middle And Right Buckets
+        let (left, middle, right) = consolidateFFTData(fftData: fftData)
         
-        // Get Significant Frequencies
-        if let result = getMostSignificantFrequencyIndex(fftData: windowedData) {
-            //print("Most significant frequency 1 at index: \(result.frequencyIndex1) with magnitude: \(result.frequencyMagnitude1)")
-            //print("Most significant frequency 2 at index: \(result.frequencyIndex2) with magnitude: \(result.frequencyMagnitude2)")
-
-            let movementThreshold: Float = 0.5
-            let magnitudeDifference = abs(result.frequencyMagnitude1 - result.frequencyMagnitude2)
-            print(magnitudeDifference)
-            if magnitudeDifference > movementThreshold {
-                // Frequency 1 Is To The Right Of Frequency 2
-                // Frequency Shift Is Lower. Microphone Moving Away From Object
-                if result.frequencyIndex1 > result.frequencyIndex2 {
-                    directionLabel.text = "Moving Away"
-                }
-                // Frequency 1 Is To The Left Of Frequency 2
-                // Frequency Shift Is Higher. Microphone Moving Toward Object
-                else {
-                    directionLabel.text = "Moving Toward"
-                }
-            }
-            else {
-                directionLabel.text = "No Significant Movement"
-            }
-        } else {
-            print("ERROR. No Frequencies Found")
+        let threshold:Float = 4.0
+        if abs(left - right) <= threshold {
+            print("No Movement. Left and Right Within Threshold. Left: \(left), Middle: \(middle), Right: \(right)")
+            directionLabel.text = "No Movement"
+        }
+        else if left > right {
+            print("Moving Away.  Left: \(left), Middle: \(middle), Right: \(right)")
+            directionLabel.text = "Moving Away"
+        }
+        else {
+            print("Moving Toward.  Left: \(left), Middle: \(middle), Right: \(right)")
+            directionLabel.text = "Moving Toward"
         }
     }
     
@@ -172,35 +160,114 @@ class DopplerViewController: UIViewController {
         for i in 0..<(fftData.count - windowSize) {
             let window = Array(fftData[i..<i+windowSize])
             // Using Max And Not Average As I Want The Biggest Magnitude In The Range
-            if let max = window.max() {
-                windowedData.append(max)
-            }
+           // if let max = window.max() {
+            //    windowedData.append(max)
+            //}
+            
+            let average = window.reduce(0, +) / Float(window.count)
+            windowedData.append(average)
         }
         return windowedData
     }
     
-    // Get The Top 2 Most Significant Frequency Indexes
+    
+    // Split FFT Data Into Three Segments: Left, Middle, And Right
+    // Each Segment Will Contain The Max Magnitude In That Region
+    // Middle Contains The Emitted Frequency (Middle Of The Array)
+    // Idea Is To Compare The Left And Right To Determine Which One Contains The Largest Peak
+    func consolidateFFTData(fftData: [Float]) -> (left: Float, middle: Float, right: Float) {
+        // Ensure there is enough data to consolidate
+        guard fftData.count >= 3 else {
+            print("Error: Not enough data to consolidate.")
+            return (0, 0, 0)
+        }
+        
+        // Split Data 47.5%, 5%, 47.5%
+        // The Magnitudes In The Middle Near The Emitted Frequency Are All The Same Or Close To Each Other
+        // Basically, I Am Removing Those Values
+        let leftSize = Int(Float(fftData.count) * 0.45)
+        let middleSize = Int(Float(fftData.count) * 0.1)
+        let rightSize = fftData.count - leftSize - middleSize
+
+        let leftPart = Array(fftData[0..<leftSize])
+        let middlePart = Array(fftData[leftSize..<(leftSize + middleSize)])
+        let rightPart = Array(fftData[(leftSize + middleSize)..<fftData.count])
+        
+        // Use Max TO Find The Peaks
+        let leftMax = (leftPart.max() ?? 0.0)
+        let middleMax = (middlePart.max() ?? 0.0)
+        let rightMax = (rightPart.max() ?? 0.0)
+
+        //let leftMax = leftPart.reduce(0, +) / Float(leftPart.count)
+        //let middleMax = middlePart.reduce(0, +) / Float(middlePart.count)
+        //let rightMax = rightPart.reduce(0, +) / Float(rightPart.count)
+
+        return (leftMax, middleMax, rightMax)
+    }
+    
+
+    // Original Method. Too Much Noise. The Direction "Fluttered" And I Could Not Figure Out How To Compensate
+    func calcDoppler1(fftData: [Float], startIndex: Int, windowSize: Int) {
+         // Get Windowed Data Set To Remove Noise
+         let windowedData = getWindowedData(fftData: fftData, windowSize: windowSize)
+         
+         // Get Significant Frequencies
+         if let result = getMostSignificantFrequencyIndex(fftData: windowedData) {
+             print("Most significant frequency 1 at index: \(result.frequencyIndex1) with magnitude: \(result.frequencyMagnitude1)")
+             print("Most significant frequency 2 at index: \(result.frequencyIndex2) with magnitude: \(result.frequencyMagnitude2)")
+
+             let movementThreshold: Float = 10.0
+             let magnitudeDifference = abs(result.frequencyMagnitude1 - result.frequencyMagnitude2)
+
+             if magnitudeDifference > movementThreshold {
+                 // Frequency 1 Is To The Right Of Frequency 2
+                 // Frequency Shift Is Lower. Microphone Moving Away From Object
+                 if result.frequencyIndex1 > result.frequencyIndex2 {
+                     directionLabel.text = "Moving Away"
+                 }
+                 // Frequency 1 Is To The Left Of Frequency 2
+                 // Frequency Shift Is Higher. Microphone Moving Toward Object
+                 else {
+                     directionLabel.text = "Moving Toward"
+                 }
+             }
+             else {
+                 directionLabel.text = "No Significant Movement"
+             }
+         } else {
+             print("ERROR. No Frequencies Found")
+         }
+    }
+    
+    // Old Function. Part Of Original Attempt To Find Peaks In The Data
     func getMostSignificantFrequencyIndex(fftData: [Float]) -> (frequencyIndex1: Int, frequencyMagnitude1: Float, frequencyIndex2: Int, frequencyMagnitude2: Float)? {
           
         var modifiedFftData = fftData
         
         // Get Index Of Max Frequency
-        guard let frequencyIndex1 = modifiedFftData.indices.max(by: { abs(modifiedFftData[$0]) < abs(modifiedFftData[$1]) }) else {
+        guard let frequencyIndex1 = modifiedFftData.indices.max(by: { modifiedFftData[$0] < modifiedFftData[$1] }) else {
             print("ERROR. Cannot Find Frequency 1")
             return nil
         }
-        let frequencyMagnitude1 = fftData[frequencyIndex1]
+        let frequencyMagnitude1 = modifiedFftData[frequencyIndex1]
         
         // Zero Out Emitted Frequency So I Do Not Select It
-        modifiedFftData[frequencyIndex1] = 0.0
-        
+        //modifiedFftData[frequencyIndex1] = -999999
+        let range = 10
+        let replacementValue: Float = -999999
+        for i in (frequencyIndex1 - range)...(frequencyIndex1 + range) {
+            // Check if the index is within bounds of the array
+            if i >= 0 && i < modifiedFftData.count {
+                modifiedFftData[i] = replacementValue
+            }
+        }
         // Get Index Of Next Max Frequency
-        guard let frequencyIndex2 = modifiedFftData.indices.max(by: { abs(modifiedFftData[$0]) < abs(modifiedFftData[$1]) }) else {
+        guard let frequencyIndex2 = modifiedFftData.indices.max(by: { modifiedFftData[$0] < modifiedFftData[$1] }) else {
             print("ERROR. Cannot Find Frequency 2")
             return nil
         }
 
-        let frequencyMagnitude2 = fftData[frequencyIndex2]
+        let frequencyMagnitude2 = modifiedFftData[frequencyIndex2]
         
         return (frequencyIndex1: frequencyIndex1,  frequencyMagnitude1: frequencyMagnitude1, frequencyIndex2: frequencyIndex2, frequencyMagnitude2: frequencyMagnitude2)
     }
