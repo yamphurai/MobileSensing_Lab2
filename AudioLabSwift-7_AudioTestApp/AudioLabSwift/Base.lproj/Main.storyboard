@@ -189,8 +189,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="2nd Highest Hz:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJW-Hi-ZW4">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Highest Hz:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CIP-u1-CQe">
+                                <rect key="frame" x="170.66666666666663" y="456" width="89" height="20.333333333333314"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="Ffi-8y-FUB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2nd Highest Hz:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJW-Hi-ZW4">
                                 <rect key="frame" x="153.66666666666666" y="510" width="122.99999999999997" height="106"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -200,8 +210,11 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Highest Hz:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CIP-u1-CQe">
-                                <rect key="frame" x="170.66666666666666" y="456" width="88.999999999999972" height="20.333333333333314"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Sound: " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="269-dL-ZTD">
+                                <rect key="frame" x="127" y="659" width="177" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="qh1-14-YaM"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -211,8 +224,6 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="CIP-u1-CQe" firstAttribute="centerY" secondItem="bUy-JB-cHv" secondAttribute="centerY" id="25s-Wu-7jg"/>
-                            <constraint firstItem="CIP-u1-CQe" firstAttribute="centerX" secondItem="bUy-JB-cHv" secondAttribute="centerX" id="3Qq-C6-dW2"/>
-                            <constraint firstItem="JJW-Hi-ZW4" firstAttribute="centerX" secondItem="bUy-JB-cHv" secondAttribute="centerX" id="r3y-JE-Vhq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="nZq-HC-z38"/>
@@ -220,6 +231,7 @@
                         <outlet property="graphView" destination="eKI-cK-aRl" id="rlZ-jo-bys"/>
                         <outlet property="label1" destination="CIP-u1-CQe" id="bUo-G7-zvf"/>
                         <outlet property="label2" destination="JJW-Hi-ZW4" id="KYm-gK-t0R"/>
+                        <outlet property="vowelSound" destination="269-dL-ZTD" id="f2g-4V-q5L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8TL-jd-Tmm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

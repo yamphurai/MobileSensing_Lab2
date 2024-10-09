@@ -44,6 +44,7 @@ class AudioModel {
     var sineFrequency1:Float = 300.0
     var sineFrequency2:Float = 650.0
     var sineFrequency3:Float = 1000.0
+    var result:String;
     
     var pulsing:Bool = false    // to determine if pulsing effect is active
     
@@ -69,6 +70,8 @@ class AudioModel {
         weightsSum = 0
         frozenFftData = []
         frozenTimeData = []
+        result = "";
+
         self.lookback = lookback
         for i in 1...lookback {
             let wt = weightFunc(x: Float(i),numVals: lookback)
@@ -358,6 +361,21 @@ class AudioModel {
         
         return isTrue
     }
+    
+    public func determineVowel() {
+           let magnitudeDifference = peak1Freq - peak2Freq
+
+           // Thresholds for vowel detection
+           let thresholdForOoooo: Float = 5.0 // Adjust based on testing
+           let thresholdForAhhhh: Float = 2.0 // Adjust based on testing
+
+           if magnitudeDifference > thresholdForOoooo {
+               result = "Detected sound: ooooo"
+           } else {
+               result = "Detected sound: ahhhh"
+           }
+       }
+    
     func pause(){
         self.audioManager?.pause()
     }

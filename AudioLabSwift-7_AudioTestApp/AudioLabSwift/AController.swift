@@ -14,11 +14,9 @@ class AController: UIViewController {
     
     @IBOutlet weak var label2: UILabel!
   
-    @IBOutlet weak var lockBtn: UIButton!
-  
+    @IBOutlet weak var vowelSound: UILabel!
+    
     @IBOutlet weak var graphView: UIView!
-    //This is the label gives the user instructions of how to use our screen
-    @IBOutlet weak var descBtn: UILabel!
     
     lazy var graph:MetalGraph? = {
         return MetalGraph(userView: self.graphView)
@@ -58,13 +56,14 @@ class AController: UIViewController {
     
     // Function that runs the same times as the audio manager to update the labels
     @objc func runOnInterval(){
-//        print("Hello World")
         
         if audio.isLoudSound(cutoff: 1.0) {
             audio.calcLoudestSounds(windowSize: 3)
+            audio.determineVowel();
         }
         label1.text = "First Loudest: \(audio.peak1Freq)"
         label2.text = "Second Loudest: \(audio.peak2Freq)"
+        vowelSound.text = audio.result;
         
     }
     
@@ -84,11 +83,6 @@ class AController: UIViewController {
         )
     }
     
-    @IBAction func lockFreqPressed(_ sender: Any) {
-        descBtn.text = "Below are the 2 highest Hz  of the sound you made. Exit and return to this page to try a different sound"
-    }
-    
-
     override func viewWillDisappear(_ animated: Bool) {
         audio.pause()
     }
