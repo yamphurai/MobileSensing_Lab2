@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         static let AUDIO_BUFFER_SIZE = 1024*4
     }
     
-    let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)   // setup audio model with the buffer size
+    let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE,lookback:45)   // setup audio model with the buffer size
     
     // to display metal graph
     lazy var graph:MetalGraph? = {

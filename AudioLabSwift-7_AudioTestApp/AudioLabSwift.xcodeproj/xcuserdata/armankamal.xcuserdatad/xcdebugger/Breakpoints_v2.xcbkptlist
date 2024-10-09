@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "92957C9C-5E24-4FAA-93A8-75AADD30139C"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5FCB661D-645C-4097-9EBB-C3C6A6F6B1EA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AudioLabSwift/ModuleAController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "8"
+            endingLineNumber = "8"
+            landmarkName = "ModuleAController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8095782A-A230-4C85-B9D1-BD8D691A6273"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AudioLabSwift/ModuleAController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6"
+            endingLineNumber = "6"
+            landmarkName = "ModuleAController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7E309F2E-C481-4ABD-A8F8-F7276D3B6E42"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AudioLabSwift/ModuleAController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "9"
+            endingLineNumber = "9"
+            landmarkName = "ModuleAController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D05ECE74-4F9B-49D2-8102-645B8E6EC13C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AudioLabSwift/ModuleAController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "4"
+            endingLineNumber = "4"
+            landmarkName = "ModuleAController"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "D05ECE74-4F9B-49D2-8102-645B8E6EC13C - b8a13ef5bd89f47a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AudioLabSwift.ModuleAController.__allocating_init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; AudioLabSwift.ModuleAController"
+                  moduleName = "AudioLabSwift"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/armankamal/Desktop/MobileSensing_Lab2/AudioLabSwift-7_AudioTestApp/AudioLabSwift/ModuleAController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "D05ECE74-4F9B-49D2-8102-645B8E6EC13C - 8374471247eee0c2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AudioLabSwift.ModuleAController.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; AudioLabSwift.ModuleAController"
+                  moduleName = "AudioLabSwift"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/armankamal/Desktop/MobileSensing_Lab2/AudioLabSwift-7_AudioTestApp/AudioLabSwift/ModuleAController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "7"
+                  endingLineNumber = "7">
+               </Location>
+               <Location
+                  uuid = "D05ECE74-4F9B-49D2-8102-645B8E6EC13C - b3fa7c916a5060f5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AudioLabSwift.ModuleAController.__allocating_init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;AudioLabSwift.ModuleAController&gt;"
+                  moduleName = "AudioLabSwift"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/armankamal/Desktop/MobileSensing_Lab2/AudioLabSwift-7_AudioTestApp/AudioLabSwift/ModuleAController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "D05ECE74-4F9B-49D2-8102-645B8E6EC13C - b00b35f527aa0ccd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AudioLabSwift.ModuleAController.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;AudioLabSwift.ModuleAController&gt;"
+                  moduleName = "AudioLabSwift"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/armankamal/Desktop/MobileSensing_Lab2/AudioLabSwift-7_AudioTestApp/AudioLabSwift/ModuleAController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "7"
+                  endingLineNumber = "7">
+               </Location>
+               <Location
+                  uuid = "D05ECE74-4F9B-49D2-8102-645B8E6EC13C - 8252e7fbe3a48946"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AudioLabSwift.ModuleAController.__deallocating_deinit"
+                  moduleName = "AudioLabSwift"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/armankamal/Desktop/MobileSensing_Lab2/AudioLabSwift-7_AudioTestApp/AudioLabSwift/ModuleAController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
