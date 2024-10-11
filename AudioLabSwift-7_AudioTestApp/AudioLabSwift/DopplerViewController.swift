@@ -15,16 +15,17 @@ class DopplerViewController: UIViewController {
     @IBOutlet weak var graphView: UIView!
     
     // Member Variables
-    let speedOfSound: Float = 343.0
     let movementThreshold: Float = 25.0
     let lowestFrequency:Float = 17000
     let highestFrequency:Float = 20000
-    let zoomWindow:Int = 100
+    let zoomWindow:Int = 50
     let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
     
     var timer: Timer?
     var emittedFrequency: Float = 18500
     var binSize: Float = 0.0
+    var historyArray = [String](repeating: "no shift", count: 5)
+    var currentIndex = 0
     
     // Properties
     lazy var graph:MetalGraph? = {
@@ -122,33 +123,109 @@ class DopplerViewController: UIViewController {
             let zoom: Int = self.zoomWindow / 2
             let frequencyIdx = Int(self.emittedFrequency * Float(AudioConstants.AUDIO_BUFFER_SIZE) / Float(audio.samplingRate))
             let startIdx = max(0, frequencyIdx - zoom)
-            let endIdx = min(AudioConstants.AUDIO_BUFFER_SIZE - 1, frequencyIdx + zoom + 1)
+            let endIdx = min(AudioConstants.AUDIO_BUFFER_SIZE - 1, frequencyIdx + zoom - 1)
             let subArray:[Float] = Array(self.audio.fftData[startIdx...endIdx])
             graph.updateGraph(data: subArray, forKey: "fftZoomed")
     
             // Calculate Doppler
-            calcDoppler(fftData: subArray, startIndex: startIdx, windowSize: 10)
+            calcShift(fftData: self.audio.fftData, windowSize: zoom)
         }
     }
     
-    // Calculate Doppler Effect From FFT Dta
-    func calcDoppler(fftData: [Float], startIndex: Int, windowSize: Int) {
-       
-        // Split Data Into Left, Middle And Right Buckets
-        let (left, middle, right) = consolidateFFTData(fftData: fftData)
+    // Calculate The Dopler Shift
+    func calcShift(fftData: [Float], windowSize: Int) {
+        guard !fftData.isEmpty else { return }
         
-        let threshold:Float = 4.0
-        if abs(left - right) <= threshold {
-            print("No Movement. Left and Right Within Threshold. Left: \(left), Middle: \(middle), Right: \(right)")
-            directionLabel.text = "No Movement"
+        // Get Index Of Emitted Frequency
+        let frequencyResolution = Float(audio.samplingRate) / Float(AudioConstants.AUDIO_BUFFER_SIZE)
+        let frequencyIdx = Int(self.emittedFrequency / frequencyResolution)
+          
+        // Get Left And Right Magnitudes And Compare
+        if let bandwidth = getFrequencyMagnitudes(fftData: fftData, emitFrequencyIndex: frequencyIdx, windowSize: windowSize) {
+            
+            let leftBandwidth = bandwidth.left
+            let rightBandwidth = bandwidth.right
+
+            // Compare Strength And Update Result
+            var result: String
+            if abs(bandwidth.left - bandwidth.right) <= 2 {
+                print("No Movement. Left Count: \(bandwidth.left). Right Count: \(bandwidth.right)")
+                result = "No Movement"
+            } else if rightBandwidth > leftBandwidth {
+                print("Moving Toward. Left Count: \(bandwidth.left). Right Count: \(bandwidth.right)")
+                result = "Moving Toward"
+            } else {
+                print("Moving Away. Left Count: \(bandwidth.left). Right Count: \(bandwidth.right)")
+                result = "Moving Away"
+            }
+            
+            historyArray[currentIndex] = result
+            currentIndex = (currentIndex + 1) % historyArray.count
+            
+            // Show More Frequenct Action
+            directionLabel.text = getMostFrequenctAction()
         }
-        else if left > right {
-            print("Moving Away.  Left: \(left), Middle: \(middle), Right: \(right)")
-            directionLabel.text = "Moving Away"
+    }
+    
+    // Use Bin Counting To Determine The Strength Of The Frequencies To The Left And Right Of The Emitted Frequency
+    func getFrequencyMagnitudes(fftData: [Float], emitFrequencyIndex: Int, windowSize: Int) -> (left: Int, right: Int)? {
+        guard !fftData.isEmpty, emitFrequencyIndex >= 0, emitFrequencyIndex < fftData.count else { return nil }
+        
+        let primaryVolume = fftData[emitFrequencyIndex]
+        var leftCount = 0
+        var rightCount = 0
+        
+        // This Is Trial And Error - Mostly Error
+        let maxVolumeRatio: Float = 0.85
+        
+        // Deterine The Number Of Bins/Indexes That Have A Significant
+        while leftCount < windowSize {
+            let volume = fftData[emitFrequencyIndex - leftCount]
+            let normalizedVolume = volume / primaryVolume
+            
+            if normalizedVolume < maxVolumeRatio { break }
+
+            leftCount += 1
+            
+            if emitFrequencyIndex - leftCount <= 0 { break }
         }
-        else {
-            print("Moving Toward.  Left: \(left), Middle: \(middle), Right: \(right)")
-            directionLabel.text = "Moving Toward"
+        
+        while rightCount < windowSize {
+            let volume = fftData[emitFrequencyIndex + rightCount]
+            let normalizedVolume = volume / primaryVolume
+            
+            if normalizedVolume < maxVolumeRatio { break }
+            
+            rightCount += 1
+            
+            if emitFrequencyIndex + rightCount >= fftData.count { break }
+        }
+        
+        return (left: leftCount, right: rightCount)
+    }
+    
+    // Get Most Frequent Recent Action Favoring Toward And Away
+    func getMostFrequenctAction() -> String {
+        var noShiftCount = 0
+        var towardCount = 0
+        var awayCount = 0
+            
+        for action in historyArray {
+            if action == "No Movement" {
+                noShiftCount += 1
+            } else if action == "Moving Toward" {
+                towardCount += 1
+            } else if action == "Moving Away" {
+                awayCount += 2
+            }
+        }
+
+        if awayCount > towardCount && awayCount > noShiftCount {
+            return "Moving Away"
+        } else if towardCount > awayCount && towardCount > noShiftCount {
+            return "Moving Toward"
+        } else {
+            return "No Movement"
         }
     }
     
@@ -181,7 +258,7 @@ class DopplerViewController: UIViewController {
             print("Error: Not enough data to consolidate.")
             return (0, 0, 0)
         }
-        
+     
         // Split Data 47.5%, 5%, 47.5%
         // The Magnitudes In The Middle Near The Emitted Frequency Are All The Same Or Close To Each Other
         // Basically, I Am Removing Those Values
@@ -204,7 +281,6 @@ class DopplerViewController: UIViewController {
 
         return (leftMax, middleMax, rightMax)
     }
-    
 
     // Original Method. Too Much Noise. The Direction "Fluttered" And I Could Not Figure Out How To Compensate
     func calcDoppler1(fftData: [Float], startIndex: Int, windowSize: Int) {
@@ -216,7 +292,7 @@ class DopplerViewController: UIViewController {
              print("Most significant frequency 1 at index: \(result.frequencyIndex1) with magnitude: \(result.frequencyMagnitude1)")
              print("Most significant frequency 2 at index: \(result.frequencyIndex2) with magnitude: \(result.frequencyMagnitude2)")
 
-             let movementThreshold: Float = 10.0
+             let movementThreshold: Float = 8.0
              let magnitudeDifference = abs(result.frequencyMagnitude1 - result.frequencyMagnitude2)
 
              if magnitudeDifference > movementThreshold {
